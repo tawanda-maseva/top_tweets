@@ -1,0 +1,35 @@
+{% extends 'ttweets_app/index.html' %}
+
+{% block content %}
+
+<h1> This page will open tweets from timeline by likes or RTs</h1>
+
+
+<!-- If logged in-->
+<h2>By Likes</h2>
+
+<center>
+<div id="chart">
+   <embed type="image/svg+xml" src= {{ likes_plot|safe }} width="1000" />
+</div>
+</center>
+
+<p style="text-align:center;">
+	<a href="{% url 'ttweets_app:timeline' %}"> Refresh</a>
+</p>
+
+
+<p></p>
+<h2> By Retweets </h2>
+
+<center>
+<div id="chart">
+   <embed type="image/svg+xml" src= {{ retweets_plot|safe }} width="1000" />
+</div>
+</center>
+
+<p style="text-align:center;">
+	<a href="{% url 'ttweets_app:timeline' %}"> Refresh</a>
+</p>
+
+{% endblock content %}
