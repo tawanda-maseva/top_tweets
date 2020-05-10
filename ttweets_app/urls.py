@@ -15,6 +15,10 @@ urlpatterns = [
     # page to show the tweet plots
     path('timeline/', views.timeline, name = 'timeline'),
 
-    #path('timeline/credentials/', views.get_credentials, name = 'get_credentials'),
+    # page to search tweets by hashtag
+    path('hashtag/', views.hashtag, name = 'hashtag'),
+
+    # page to search tweets by someone
+    path('someone', views.someone, name = 'someone')
 
 ]

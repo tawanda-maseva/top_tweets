@@ -11,3 +11,9 @@ class API_Credentials(models.Model):
 	# Keys for searching from user timeline
 	access_token = models.CharField(max_length=60)
 	access_token_secret = models.CharField(max_length=60)
+
+class App_Credentials(models.Model):
+	'''Keys to authenticate webapp with Tweeter API'''
+	api_key = models.CharField(max_length=60)
+	api_secret_key = models.CharField(max_length=60)
+

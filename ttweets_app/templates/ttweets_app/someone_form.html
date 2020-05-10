@@ -1,0 +1,12 @@
+{% extends 'ttweets_app/index.html' %}
+{% block content %}
+<p>
+	Top tweets by Someone
+</p>
+<form action="{% url 'ttweets_app:someone' %}" method="post">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<input type="submit" value="Submit">
+</form>
+
+{% endblock content %}

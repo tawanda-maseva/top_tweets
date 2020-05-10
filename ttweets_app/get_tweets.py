@@ -11,18 +11,41 @@ def authenticate(credentials):
 	secret_key = credentials.api_secret_key
 	token = credentials.access_token
 	token_secret = credentials.access_token_secret
-
 	# login
 	auth = tw.OAuthHandler(key, secret_key)
 	auth.set_access_token(token, token_secret)
 	api = tw.API(auth)
-
 	return api
+
+def public_auth(credentials):
+	'''Authenticate the app'''
+	auth = app_auth(credentials)
+	api = tw.API(auth)
+	return api
+
+def app_auth(credentials):
+	'''Authenticate the webapp with Tweeter API'''
+	key = credentials.api_key
+	secret_key = credentials.api_secret_key
+	auth = tw.OAuthHandler(key, secret_key)
+	return auth
 
 def timeline(api, limit):
 	'''Get tweets from user's timeline'''
 	raw_timeline = api.home_timeline(count = limit)
 	new_tweets, likes, retweets = extract_tweets(raw_timeline)
+	return new_tweets, likes, retweets
+
+def hashtag(api, hashtag, limit):
+	'''Get tweets of a hashtag'''
+	raw_tweets = api.search(q = hashtag, lang = 'en', count = limit)
+	new_tweets, likes, retweets = extract_tweets(raw_tweets)
+	return new_tweets, likes, retweets
+
+def account(api, handle, limit):
+	'''Get tweets by someone on Tweeter'''
+	user_tweets = api.user_timeline(screen_name = handle, count = limit)
+	new_tweets, likes, retweets = extract_tweets(user_tweets)
 	return new_tweets, likes, retweets
 
 def extract_tweets(raw_tweets):
@@ -40,7 +63,6 @@ def extract_tweets(raw_tweets):
 		new_tweets.insert(0, tweet_data['created_at']) #tweet time
 		likes.insert(0, likes_dict)
 		retweets.insert(0, retweets_dict)
-
 	return new_tweets, likes, retweets 
 
 def plot_by(category, time_posted, likes_retweets):
@@ -51,7 +73,7 @@ def plot_by(category, time_posted, likes_retweets):
 
 	bchart.x_labels = time_posted
 	bchart.add(category.title(), likes_retweets)
-	bchart.title = 'Tweets from User' + '\'s Timeline by ' + category.title()
+	#bchart.title = 'Tweets from User' + '\'s Timeline by ' + category.title()
 	return bchart
 
 def bar_config():

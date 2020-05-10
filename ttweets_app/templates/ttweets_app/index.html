@@ -2,7 +2,9 @@
 
 <h3>
 	<a href=" {% url 'ttweets_app:home' %} ">Home</a>  - 
-	<a href=" {% url 'ttweets_app:timeline'%}"> Timeline</a>
+	<a href=" {% url 'ttweets_app:timeline'%}"> Timeline</a>  -
+	<a href="{% url 'ttweets_app:hashtag' %}">Hashtag</a>  -
+	<a href=" {% url 'ttweets_app:someone' %}"> Tweeter Handle</a>
 </h3>
 
 {% block content %}{% endblock content %}
