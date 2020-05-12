@@ -4,11 +4,14 @@ from pygal.style import Style
 
 import tweepy as tw
 
-def private_auth(credentials, access_token, access_token_secret):
-	'''Authenticate webapp and user on tweeter API'''
-	# auth webapp
-	auth = app_auth(credentials)
-	# get access to user tweeter account
+def private_auth(form):
+	'''Authenticate user using their app details'''
+	key = form.cleaned_data['api_key']
+	secret_key = form.cleaned_data['api_secret_key']
+	access_token = form.cleaned_data['access_token']
+	access_token_secret = form.cleaned_data['access_token_secret']
+
+	auth = tw.OAuthHandler(key, secret_key)
 	auth.set_access_token(access_token, access_token_secret)
 	api = tw.API(auth)
 	return api

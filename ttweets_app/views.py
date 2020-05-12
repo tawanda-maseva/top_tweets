@@ -28,11 +28,7 @@ def timeline(request):
 	else:
 		form = TokensForm(request.POST)
 		if form.is_valid():
-			access_token = form.cleaned_data['access_token']
-			access_token_secret = form.cleaned_data['access_token_secret']
-			# grant authorization
-			app_cred = App_Credentials.objects.get(id=1) # modify to admin owner
-			api = gt.private_auth(app_cred, access_token, access_token_secret)
+			api = gt.private_auth(form)
 			new_tweets, likes, retweets = gt.timeline(api, limit = 30)
 			# plot data
 			likes_plot = gt.plot_by('likes', new_tweets, likes)
