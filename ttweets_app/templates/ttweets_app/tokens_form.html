@@ -1,0 +1,12 @@
+{% extends 'ttweets_app/index.html' %}
+{% block content %}
+<p>
+	Get Tweets from your timeline via your access tokens
+</p>
+<form action="{% url 'ttweets_app:timeline' %}" method="post">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<input type="submit" value="Submit">
+</form>
+
+{% endblock content %}
