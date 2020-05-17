@@ -7,4 +7,16 @@
 	<a href=" {% url 'ttweets_app:someone' %}"> Tweeter Handle</a>
 </h3>
 
+{% if user.is_authenticated %}
+	<p style="text-align:right;" >Hi, {{ user.username }}.
+		<a href="{% url 'users:logout' %}"> Logout</a>
+	</p>
+
+{% else %}
+	<h4 style="text-align:right;">
+	<a href=" {% url 'users:login' %}">Login</a>
+	</h4> 
+{% endif %}
+
+
 {% block content %}{% endblock content %}

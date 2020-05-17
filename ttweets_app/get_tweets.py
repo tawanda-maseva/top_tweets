@@ -4,13 +4,8 @@ from pygal.style import Style
 
 import tweepy as tw
 
-def private_auth(form):
+def private_auth(key, secret_key, access_token, access_token_secret):
 	'''Authenticate user using their app details'''
-	key = form.cleaned_data['api_key']
-	secret_key = form.cleaned_data['api_secret_key']
-	access_token = form.cleaned_data['access_token']
-	access_token_secret = form.cleaned_data['access_token_secret']
-
 	auth = tw.OAuthHandler(key, secret_key)
 	auth.set_access_token(access_token, access_token_secret)
 	api = tw.API(auth)
@@ -55,11 +50,11 @@ def extract_tweets(raw_tweets):
 		tweet_data = data._json
 		tweet_url = 'https://twitter.com/i/web/status/' + str(tweet_data['id_str'])
 
-		likes_dict = {'value':tweet_data['favorite_count'], 'xlink': tweet_url, 'label':tweet_data['text']}
-		retweets_dict = {'value':tweet_data['retweet_count'], 'xlink': tweet_url, 'label':tweet_data['text'] }
+		likes_dict = {'value':tweet_data['favorite_count'], 'xlink': tweet_url, 'label':tweet_data['created_at']}
+		retweets_dict = {'value':tweet_data['retweet_count'], 'xlink': tweet_url, 'label':tweet_data['created_at'] }
 
 		# save to lists
-		new_tweets.insert(0, tweet_data['created_at']) #tweet time
+		new_tweets.insert(0, tweet_data['text']) #tweet text
 		likes.insert(0, likes_dict)
 		retweets.insert(0, retweets_dict)
 	return new_tweets, likes, retweets 
@@ -72,7 +67,6 @@ def plot_by(category, time_posted, likes_retweets):
 
 	bchart.x_labels = time_posted
 	bchart.add(category.title(), likes_retweets)
-	#bchart.title = 'Tweets from User' + '\'s Timeline by ' + category.title()
 	return bchart
 
 def bar_config():
@@ -81,7 +75,7 @@ def bar_config():
 	chart_config.x_label_rotation = 45
 	chart_config.truncate_label = 17
 	chart_config.width = 1000
-	chart_config.x_title = 'Time tweeted'
+	chart_config.x_title = 'Tweet'
 	return chart_config
 
 def bar_style():
@@ -90,9 +84,9 @@ def bar_style():
 						label_font_size = 12,
 						title_font_size = 15,
 						value_font_size = 12,
-						value_label_font_size = 12,
+						value_label_font_size = 8,
 						plot_background = 'grey',
 						major_label_font_size = 12,
-						tooltip_font_size = 8
+						tooltip_font_size = 12
 						)
 	return custom_style

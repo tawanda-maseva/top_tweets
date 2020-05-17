@@ -19,6 +19,9 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # Home page
-    path('', include('ttweets_app.urls')),
+    # Map blank to the ttweets app
+    path('', include('ttweets_app.urls', namespace = 'ttweets')),
+
+    # users app
+    path('users/', include('users.urls')),
 ]

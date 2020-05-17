@@ -10,7 +10,7 @@ urlpatterns = [
     path('', views.home, name = 'home'),
 
     # page to request login credentials
-    path('credentials', views.credentials, name = 'credentials'),
+    path('tokens/', views.tokens, name = 'tokens'),
 
     # page to show the tweet plots
     path('timeline/', views.timeline, name = 'timeline'),
@@ -19,6 +19,6 @@ urlpatterns = [
     path('hashtag/', views.hashtag, name = 'hashtag'),
 
     # page to search tweets by someone
-    path('someone', views.someone, name = 'someone')
+    path('someone/', views.someone, name = 'someone')
 
 ]

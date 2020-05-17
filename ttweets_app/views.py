@@ -1,8 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
-from . models import App_Credentials
+from . models import App_Credentials, Access_Tokens
 from . import get_tweets as gt
 from . forms import TokensForm, HashtagForm, SomeoneForm
 
@@ -12,35 +14,59 @@ def home(request):
 	'''Load the home page'''
 	return render(request, 'ttweets_app/home.html')
 
-def credentials(request):
-	'''Get the user's API credentials'''
-	form = API_loginForm()
-	context = {'form': form}
-	return render(request, 'ttweets_app/credentials.html', context)
-
-def timeline(request):
-	'''Get tweets from my timeline'''
+def tokens(request):
+	'''Get the user's API tokens'''
 	if request.method != 'POST':
-		# Give form for access tokens
 		form = TokensForm()
-		context = {'form': form}
-		return render(request, 'ttweets_app/tokens_form.html', context)
 	else:
 		form = TokensForm(request.POST)
 		if form.is_valid():
-			api = gt.private_auth(form)
-			new_tweets, likes, retweets = gt.timeline(api, limit = 30)
-			# plot data
-			likes_plot = gt.plot_by('likes', new_tweets, likes)
-			likes_plot.title = 'Tweets from User' + '\'s Timeline by Likes'
-			retweets_plot = gt.plot_by('retweets', new_tweets, retweets)
-			retweets_plot.title = 'Tweets from User' + '\'s Timeline by Retweets'
-			# render
-			likes_plot = likes_plot.render_data_uri()
-			retweets_plot = retweets_plot.render_data_uri()
+			form = form.save(commit = False) # format to database headers
+			form.owner = request.user
+			form.save()
+			return redirect('/') # to home
 
-			context = {'likes_plot': likes_plot, 'retweets_plot': retweets_plot}
-			return render(request, 'ttweets_app/timeline.html', context)
+	context = {'form': form}
+	return render(request, 'ttweets_app/tokens_form.html', context)
+
+def timeline(request):
+	'''Get tweets from user's timeline'''
+	if request.user.is_authenticated:
+		account = User.objects.get(username = request.user)
+		tokens = Access_Tokens.objects.get(owner_id = account.id)
+		api = gt.private_auth(
+							  key = tokens.api_key,
+							  secret_key = tokens.api_secret_key,
+							  access_token = tokens.access_token,
+							  access_token_secret = tokens.access_token_secret
+							  )
+	else:
+		if request.method != 'POST':
+			# Give form for access tokens
+			form = TokensForm()
+			context = {'form': form}
+			return render(request, 'ttweets_app/tokens_form.html', context)
+		else:
+			form = TokensForm(request.POST)
+			if form.is_valid():
+				api = gt.private_auth(
+									key = form.cleaned_data['api_key'],
+									secret_key = form.cleaned_data['api_secret_key'],
+									access_token = form.cleaned_data['access_token'],
+									access_token_secret = form.cleaned_data['access_token_secret'],
+									)
+	new_tweets, likes, retweets = gt.timeline(api, limit = 30)
+	# plot data
+	likes_plot = gt.plot_by('likes', new_tweets, likes)
+	likes_plot.title = 'Tweets from User' + '\'s Timeline by Likes'
+	retweets_plot = gt.plot_by('retweets', new_tweets, retweets)
+	retweets_plot.title = 'Tweets from User' + '\'s Timeline by Retweets'
+	# render
+	likes_plot = likes_plot.render_data_uri()
+	retweets_plot = retweets_plot.render_data_uri()
+
+	context = {'likes_plot': likes_plot, 'retweets_plot': retweets_plot}
+	return render(request, 'ttweets_app/timeline.html', context)
 
 
 def hashtag(request): # This is still buggy
