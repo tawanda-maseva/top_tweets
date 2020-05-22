@@ -1,12 +1,21 @@
 {% extends 'ttweets_app/index.html' %}
+{% load bootstrap4 %}
+
+{% block header %}
+<h1 class="display-3"> Top tweets by Someone
+</h1>
+
+<p class="lead">Plot tweets from by an existing Tweeter account user </p>
+{% endblock header %}
+
 {% block content %}
-<p>
-	Top tweets by Someone
-</p>
 <form action="{% url 'ttweets_app:someone' %}" method="post">
 	{% csrf_token %}
-	{{ form.as_p }}
-	<input type="submit" value="Submit">
-</form>
+	{% bootstrap_form form %}
 
+	{% buttons %}
+	<input type="submit" value="Submit">
+
+	{% endbuttons %}
+</form>
 {% endblock content %}

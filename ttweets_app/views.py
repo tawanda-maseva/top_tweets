@@ -49,12 +49,18 @@ def timeline(request):
 		else:
 			form = TokensForm(request.POST)
 			if form.is_valid():
-				api = gt.private_auth(
-									key = form.cleaned_data['api_key'],
-									secret_key = form.cleaned_data['api_secret_key'],
-									access_token = form.cleaned_data['access_token'],
-									access_token_secret = form.cleaned_data['access_token_secret'],
-									)
+				try:	
+					api = gt.private_auth(
+								key = form.cleaned_data['api_key'],
+								secret_key = form.cleaned_data['api_secret_key'],
+								access_token = form.cleaned_data['access_token'],
+								access_token_secret = form.cleaned_data['access_token_secret'],
+								)
+				except Exception:
+					return redirect('/')
+				else:
+					pass
+
 	new_tweets, likes, retweets = gt.timeline(api, limit = 30)
 	# plot data
 	likes_plot = gt.plot_by('likes', new_tweets, likes)

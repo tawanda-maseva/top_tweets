@@ -1,12 +1,35 @@
 {% extends 'ttweets_app/index.html' %}
+{% load bootstrap4 %}
+
+{% block header%}
+
+<h3 class="display-4">
+	Tweets from your timeline
+</h3>
+<p class="lead">Get tweets from your timeline via your access keys</p>
+
+{% endblock header %}
+
 {% block content %}
-<p>
-	Get Tweets from your timeline via your access tokens
-</p>
+{% if user.user.is_authenticated %}
 <form action="{% url 'ttweets_app:tokens' %}" method="post">
 	{% csrf_token %}
 	{{ form.as_p }}
 	<input type="submit" value="Submit">
 </form>
+
+{% else %}
+
+<form action="{% url 'ttweets_app:timeline' %}" method="post">
+	{% csrf_token %}
+	{% bootstrap_form form %}
+
+	{% buttons %}
+	<input type="submit" value="Submit">
+	{% endbuttons %}
+</form>
+
+
+{% endif%}
 
 {% endblock content %}

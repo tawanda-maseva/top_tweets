@@ -1,10 +1,14 @@
 {% extends 'ttweets_app/index.html' %}
+{% load bootstrap4 %}
+
+{% block header %}
+<h1 class="display-3"> Tweets by #hashtag </h1>
+
+<p class="lead">Show the hashtag plots by likes and retweets.</p>
+
+{% endblock header %}
+
 {% block content %}
-<h3>
-	Show the hashtag plots by likes and retweets
-</h3>
-
-
 <h2>By Likes</h2>
 
 <center>
@@ -14,7 +18,7 @@
 </center>
 
 <p style="text-align:center;">
-	<a href="{% url 'ttweets:hashtag' %}"> Another one</a>
+	<a href="{% url 'ttweets:hashtag' %}" class="btn btn-primary">Another one</a>
 </p>
 
 
@@ -28,7 +32,7 @@
 </center>
 
 <p style="text-align:center;">
-	<a href="{% url 'ttweets_app:hashtag' %}"> Another one</a>
+	<a href="{% url 'ttweets:hashtag' %}" class="btn btn-primary">Another one</a>
 </p>
 
 {% endblock content %}

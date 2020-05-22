@@ -1,8 +1,21 @@
 {% extends 'ttweets_app/index.html' %}
+{% load bootstrap4 %}
+
+{% block header %}
+
+<h1 class="display-3"> Welcome to Top Tweets</h1>
+<p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat.</p>
+
+{% endblock header %}
+
 
 {% block content %}
 
-<h1> Welcome to Top Tweets</h1>
+{% buttons %}
+<a href="{% url 'ttweets_app:timeline'%}" class="btn btn-primary btn-lg">See tweets from your Timeline</a>
+<a href="{% url 'ttweets_app:hashtag' %}" class="btn btn-primary btn-lg">See tweets by Hashtag</a>
+<a href="{% url 'ttweets_app:someone' %}" class="btn btn-primary btn-lg">See tweets by Someone</a>
+
+{% endbuttons %}
 
 {% endblock content %}
-

@@ -1,15 +1,22 @@
 {% extends 'ttweets_app/index.html' %}
+{% load bootstrap4 %}
+
+{% block header %}
+<h1 class="display-3"> Create an account</h1>
+
+<p class="lead">Create an account so that you don't have to remember your lengthy access keys</p>
+
+{% endblock header %}
 
 {% block content %}
 
-<h1> Create an account</h1>
-
-
 <form action="{% url 'users:register'%}" method="POST">
 	{% csrf_token %}
-	{{form.as_p}}
+	{% bootstrap_form form %}
+
+	{% buttons %}
 	<button type="submit">Register</button>
-	
+	{% endbuttons %}	
 </form>
 
 {% endblock content %}
