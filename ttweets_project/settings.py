@@ -26,7 +26,7 @@ SECRET_KEY = 'leag$ch)ga_8i8c@@w3s5u2_nw3cw6y-+3l3xmn#x*865pd+ef'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
@@ -62,7 +62,7 @@ ROOT_URLCONF = 'ttweets_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'ttweets_project/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
