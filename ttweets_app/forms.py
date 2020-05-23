@@ -1,6 +1,9 @@
 from django import forms
 from . models import Access_Tokens
 
+from . import get_tweets as gt
+import tweepy
+
 class TokensForm(forms.ModelForm):
     '''Form for collecting API login credentials'''
     class Meta:
@@ -11,7 +14,6 @@ class TokensForm(forms.ModelForm):
     				'access_token':'Access Token', 
     				'access_token_secret':'Access Token Secret',
     				}
-
 
 class HashtagForm(forms.Form):
 	'''Get #hashtag  input from user'''

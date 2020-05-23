@@ -19,6 +19,9 @@ urlpatterns = [
     path('hashtag/', views.hashtag, name = 'hashtag'),
 
     # page to search tweets by someone
-    path('someone/', views.someone, name = 'someone')
+    path('someone/', views.someone, name = 'someone'),
+
+    # instruction for getting tokens
+    path('help/', views.tokens_error, name ='help')
 
 ]

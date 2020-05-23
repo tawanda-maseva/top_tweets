@@ -20,7 +20,7 @@ def login_request(request):
 			user = authenticate(username=username, password=password)
 			if user is not None:
 				login(request, user)
-				return redirect('/') # home for quick loading
+				return redirect('/timeline') # timeline
 
 	return render(request = request,
 				  template_name = 'users/login.html',

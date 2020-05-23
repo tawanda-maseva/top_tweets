@@ -1,0 +1,25 @@
+{% extends 'ttweets_app/index.html' %}
+{% load bootstrap4 %}
+
+{% block header%}
+
+<h3 class="display-4">
+	Invalid Tweeter Tokens: Help Menu
+</h3>
+<p class="lead">Step by step guide of how to get your user tokens</p>
+
+{% endblock header %}
+
+{% block content %}
+<p class="lead">To get the tokens you need to get tweets from your timeline:</p>
+
+<ul>
+	<li class="lead"> Create a tweeter developer account </li>
+</ul>
+
+{% buttons %}
+<a href="{% url 'ttweets_app:timeline'%}" class="btn btn-primary btn-lg">I have my tokens</a>
+
+{% endbuttons %}
+
+{% endblock content%}

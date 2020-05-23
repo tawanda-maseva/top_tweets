@@ -1,10 +1,12 @@
 {% extends 'ttweets_app/index.html' %}
-{% block content %}
+
+{% block header %}
 <h3>
 	Show the Someone's tweets by likes and retweets
 </h3>
 
-
+{% endblock header %}
+{% block content %}
 <h2>By Likes</h2>
 
 <center>
@@ -14,7 +16,7 @@
 </center>
 
 <p style="text-align:center;">
-	<a href="{% url 'ttweets_app:someone' %}"> Another one</a>
+	<a href="{% url 'ttweets_app:someone'%}" class="btn btn-primary btn-lg">Another one</a>
 </p>
 
 
@@ -28,7 +30,7 @@
 </center>
 
 <p style="text-align:center;">
-	<a href="{% url 'ttweets_app:someone' %}"> Another one</a>
+	<a href="{% url 'ttweets_app:someone'%}" class="btn btn-primary btn-lg">Another one</a>
 </p>
 
 {% endblock content %}

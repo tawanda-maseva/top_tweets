@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django import forms
+
 
 # Create your models here.
 
@@ -30,6 +32,7 @@ class Access_Tokens(models.Model):
 
 	class Meta:
 		verbose_name_plural = 'User_access_tokens'
+
 
 	def __str__(self):
 		'''Return string representation of model'''

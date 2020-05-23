@@ -1,8 +1,9 @@
 {% extends 'ttweets_app/index.html' %}
+{% load bootstrap4 %}
 
 {% block header %}
 
-<h1 class="display-3"> This page will open tweets from timeline by likes or RTs</h1>
+<h1 class="display-3"> Tweets from your TL</h1>
 
 <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat.</p>
 
@@ -18,10 +19,11 @@
 </div>
 </center>
 
+{% buttons %}
 <p style="text-align:center;">
-	<a href="{% url 'ttweets_app:timeline' %}"> Refresh</a>
+	<a href="{% url 'ttweets_app:timeline'%}" class="btn btn-primary btn-lg">Refresh</a>
 </p>
-
+{% endbuttons %}
 
 <p></p>
 <h2> By Retweets </h2>
@@ -32,8 +34,10 @@
 </div>
 </center>
 
+{% buttons %}
 <p style="text-align:center;">
-	<a href="{% url 'ttweets_app:timeline' %}"> Refresh</a>
+	<a href="{% url 'ttweets_app:timeline'%}" class="btn btn-primary btn-lg">Refresh</a>
 </p>
+{% endbuttons %}
 
 {% endblock content %}

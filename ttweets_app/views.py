@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from . models import App_Credentials, Access_Tokens
 from . import get_tweets as gt
 from . forms import TokensForm, HashtagForm, SomeoneForm
+import tweepy
 
 # Create your views here.
 
@@ -49,19 +50,17 @@ def timeline(request):
 		else:
 			form = TokensForm(request.POST)
 			if form.is_valid():
-				try:	
-					api = gt.private_auth(
+				api = gt.private_auth(
 								key = form.cleaned_data['api_key'],
 								secret_key = form.cleaned_data['api_secret_key'],
 								access_token = form.cleaned_data['access_token'],
-								access_token_secret = form.cleaned_data['access_token_secret'],
+								access_token_secret = form.cleaned_data['access_token_secret']
 								)
-				except Exception:
-					return redirect('/')
-				else:
-					pass
+	try:		
+		new_tweets, likes, retweets = gt.timeline(api, limit = 30)
+	except tweepy.TweepError:
+		return redirect('/help')
 
-	new_tweets, likes, retweets = gt.timeline(api, limit = 30)
 	# plot data
 	likes_plot = gt.plot_by('likes', new_tweets, likes)
 	likes_plot.title = 'Tweets from User' + '\'s Timeline by Likes'
@@ -87,7 +86,7 @@ def hashtag(request): # This is still buggy
 		if form.is_valid():
 			hashtag = form.cleaned_data['hashtag']
 			# get data
-			app_cred = App_Credentials.objects.get(id=1) # modify to admin owner
+			app_cred = App_Credentials.objects.get(id=1) # sytem database
 			api = gt.public_auth(app_cred)
 			new_tweets, likes, retweets = gt.hashtag(api, hashtag, limit = 30)
 			# plot data
@@ -114,7 +113,7 @@ def someone(request):
 		if form.is_valid():
 			handle = form.cleaned_data['handle']
 			# get data
-			app_cred = App_Credentials.objects.get(id=1) # modify to admin owner
+			app_cred = App_Credentials.objects.get(id=1) # sytem database
 			api = gt.public_auth(app_cred)
 			new_tweets, likes, retweets = gt.account(api, handle, limit = 30)
 			# plot data
@@ -128,6 +127,13 @@ def someone(request):
 
 			context = {'likes_plot': likes_plot, 'retweets_plot': retweets_plot}
 			return render(request, 'ttweets_app/someone.html', context)
+
+def tokens_error(request):
+	'''Handle incorrect tokens exception'''
+	return render(
+				  request = request,
+				  template_name = 'ttweets_app/tokens_error.html'
+				)
 
 
 
