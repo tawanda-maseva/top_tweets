@@ -1,0 +1,35 @@
+{% extends 'ttweets_app/index.html' %}
+{% load bootstrap4 %}
+
+{% block header %}
+<h1 class="display-3"> {{request.user}}</h1>
+
+<p class="lead">This is your profile info</p>
+
+{% endblock header %}
+
+{% block content %}
+
+<h2 class="display-5"> Your Twitter Access Tokens </h2>
+
+{% if saved_tokens %}
+<ul>
+	<li>{{ tokens.api_key }}</li>
+	<li>{{ tokens.api_secret_key }}</li>
+	<li>{{ tokens.access_token }}</li>
+	<li>{{ tokens.access_token_secret }}</li>
+</ul>
+
+{% buttons %}
+<a href="{% url 'users:edit_tokens'%}" class="btn btn-primary btn-lg">Edit my Tokens</a>
+{% endbuttons %}
+
+{% else %}
+<p>You have not entered your tokens yet.</p>
+{% buttons %}
+<a href="{% url 'ttweets_app:tokens' %}" class="btn btn-primary btn-lg" >Enter now</a>
+{% endbuttons %}
+
+{% endif %}
+
+{% endblock content %}

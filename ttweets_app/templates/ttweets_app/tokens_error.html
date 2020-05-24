@@ -17,9 +17,15 @@
 	<li class="lead"> Create a tweeter developer account </li>
 </ul>
 
-{% buttons %}
-<a href="{% url 'ttweets_app:timeline'%}" class="btn btn-primary btn-lg">I have my tokens</a>
+{% if user.is_authenticated %}
+	{% buttons %}
+	<a href="{% url 'users:account'%}" class="btn btn-primary btn-lg">Update my tokens</a>
+	{% endbuttons %}
 
-{% endbuttons %}
+{% else %}
+	{% buttons %}
+	<a href="{% url 'ttweets_app:timeline'%}" class="btn btn-primary btn-lg">I have my tokens</a>
+	{% endbuttons %}
+{% endif %}
 
 {% endblock content%}

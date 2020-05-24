@@ -28,13 +28,16 @@ def tokens(request):
 			return redirect('/') # to home
 
 	context = {'form': form}
-	return render(request, 'ttweets_app/tokens_form.html', context)
+	return render(request, 'ttweets_app/save_tokens.html', context)
 
 def timeline(request):
 	'''Get tweets from user's timeline'''
 	if request.user.is_authenticated:
 		account = User.objects.get(username = request.user)
-		tokens = Access_Tokens.objects.get(owner_id = account.id)
+		try: # make sure user has saved tokens in database	
+			tokens = Access_Tokens.objects.get(owner_id = account.id)
+		except Access_Tokens.DoesNotExist:
+			return redirect('/tokens_error')
 		api = gt.private_auth(
 							  key = tokens.api_key,
 							  secret_key = tokens.api_secret_key,
@@ -59,7 +62,7 @@ def timeline(request):
 	try:		
 		new_tweets, likes, retweets = gt.timeline(api, limit = 30)
 	except tweepy.TweepError:
-		return redirect('/help')
+		return redirect('/tokens_error')
 
 	# plot data
 	likes_plot = gt.plot_by('likes', new_tweets, likes)
@@ -134,6 +137,8 @@ def tokens_error(request):
 				  request = request,
 				  template_name = 'ttweets_app/tokens_error.html'
 				)
+
+
 
 
 

@@ -4,36 +4,24 @@
 {% block header%}
 
 <h3 class="display-4">
-	Tweets from your timeline
+	Save your Tokens
 </h3>
-<p class="lead">Get tweets from your timeline via your access keys</p>
+<p class="lead">Enter your tokens here. We'll remember them to save you the trouble.</p>
 
 {% endblock header %}
 
 {% block content %}
-{% if user.user.is_authenticated %}
 <form action="{% url 'ttweets_app:tokens' %}" method="post">
-	{% csrf_token %}
-	{{ form.as_p }}
-	<input type="submit" value="Submit">
-</form>
-
-{% else %}
-
-<form action="{% url 'ttweets_app:timeline' %}" method="post">
 	{% csrf_token %}
 	{% bootstrap_form form %}
 
 	{% buttons %}
-	<input type="submit" value="Submit">
+	<input type="submit" value="Save">
 	{% endbuttons %}
 </form>
 
 <p>
 	Don't have tweeter login tokens? <a href="{% url 'ttweets_app:tokens_error'%}"> See help menu</a> 
 </p>
-
-
-{% endif%}
 
 {% endblock content %}

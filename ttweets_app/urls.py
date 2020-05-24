@@ -22,6 +22,6 @@ urlpatterns = [
     path('someone/', views.someone, name = 'someone'),
 
     # instruction for getting tokens
-    path('help/', views.tokens_error, name ='help')
+    path('tokens_error/', views.tokens_error, name ='tokens_error'),
 
 ]
