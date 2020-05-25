@@ -39,6 +39,20 @@ class Access_Tokens(models.Model):
 		'''Return string representation of model'''
 		return str(self.owner)
 
+class Profile_Tokens(models.Model):
+	'''Boolean for tracking is user has saved tokens to their profile'''
+	saved_tokens = models.BooleanField(default=False)
+	owner = models.ForeignKey(User, on_delete=models.CASCADE)
+
+	class Meta:
+		verbose_name_plural = 'User_Profile_Tokens'
+
+	def __str__(self):
+		'''Return string representation of model'''
+		return str(self.owner)
+
+
+
 
 
 

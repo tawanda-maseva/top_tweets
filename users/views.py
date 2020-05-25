@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
 from . forms import RegisterForm
-from ttweets_app.models import Access_Tokens
+from ttweets_app.models import Access_Tokens, Profile_Tokens
 from ttweets_app.forms import TokensForm
 
 
@@ -43,8 +43,14 @@ def register(request):
 	else:
 		form = RegisterForm(request.POST)
 		if form.is_valid():
-			# save details and authenticate user
+			# save details and boolean for saving their tokens
 			new_user = form.save()
+			username = form.cleaned_data['username']
+			user = User.objects.get(username = username)
+			user_profile_tokens = Profile_Tokens(id = None, owner = user)
+			user_profile_tokens.save()
+
+			# authenticate user
 			user = authenticate(username=new_user.username, 
 								password=request.POST['password1'])
 			if user is not None:
@@ -60,18 +66,16 @@ def register(request):
 def account(request):
 	'''Show the user's tokes info'''
 	account_owner = User.objects.get(username = request.user)
-	saved_tokens = True
-	try:
-		tokens = Access_Tokens.objects.get(owner_id = account_owner.id)
-	except Access_Tokens.DoesNotExist:
-		#return redirect('/')
-		saved_tokens = False # user has not saved tokens yet
+	tokens_status = Profile_Tokens.objects.get(owner_id  = account_owner.id)
+	saved_tokens = tokens_status.saved_tokens
+	if saved_tokens == False:
 		return render(request, 'users/account.html', context ={'saved_tokens':saved_tokens})
-
-	return render(request = request,
-				  template_name = 'users/account.html',
-				  context = {'tokens':tokens, 'saved_tokens':saved_tokens}
-				  )
+	else:
+		tokens = Access_Tokens.objects.get(owner_id = account_owner.id)
+		return render(request = request,
+				  	template_name = 'users/account.html',
+				  	context = {'tokens':tokens, 'saved_tokens':saved_tokens}
+				  	)
 
 @login_required
 def edit_tokens(request):

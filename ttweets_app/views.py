@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
-from . models import App_Credentials, Access_Tokens
+from . models import App_Credentials, Access_Tokens, Profile_Tokens
 from . import get_tweets as gt
 from . forms import TokensForm, HashtagForm, SomeoneForm
 import tweepy
@@ -15,6 +15,7 @@ def home(request):
 	'''Load the home page'''
 	return render(request, 'ttweets_app/home.html')
 
+@login_required
 def tokens(request):
 	'''Get the user's API tokens'''
 	if request.method != 'POST':
@@ -25,6 +26,11 @@ def tokens(request):
 			form = form.save(commit = False) # format to database headers
 			form.owner = request.user
 			form.save()
+			# update the saved tokens boolean
+			account_owner = User.objects.get(username = request.user)
+			tokens_status = Profile_Tokens.objects.get(owner_id  = account_owner.id)
+			tokens_status.saved_tokens = True
+			tokens_status.save()	
 			return redirect('/') # to home
 
 	context = {'form': form}
@@ -33,18 +39,21 @@ def tokens(request):
 def timeline(request):
 	'''Get tweets from user's timeline'''
 	if request.user.is_authenticated:
-		account = User.objects.get(username = request.user)
-		try: # make sure user has saved tokens in database	
-			tokens = Access_Tokens.objects.get(owner_id = account.id)
-		except Access_Tokens.DoesNotExist:
+		# make sure user has saved tokens in database	
+		account = User.objects.get(username=request.user)
+		tokens_status = Profile_Tokens.objects.get(owner_id=account.id)
+		saved_tokens = tokens_status.saved_tokens
+		if saved_tokens == False:
 			return redirect('/tokens_error')
-		api = gt.private_auth(
-							  key = tokens.api_key,
-							  secret_key = tokens.api_secret_key,
-							  access_token = tokens.access_token,
-							  access_token_secret = tokens.access_token_secret
-							  )
-	else:
+		else:
+			tokens = Access_Tokens.objects.get(owner_id = account.id)
+			api = gt.private_auth(
+							  	key = tokens.api_key,
+							  	secret_key = tokens.api_secret_key,
+							  	access_token = tokens.access_token,
+							  	access_token_secret = tokens.access_token_secret
+							  	)
+	else: # not authenticated
 		if request.method != 'POST':
 			# Give form for access tokens
 			form = TokensForm()
@@ -61,7 +70,7 @@ def timeline(request):
 								)
 	try:		
 		new_tweets, likes, retweets = gt.timeline(api, limit = 30)
-	except tweepy.TweepError:
+	except Exception: # tweepy.TweepError
 		return redirect('/tokens_error')
 
 	# plot data
@@ -75,7 +84,6 @@ def timeline(request):
 
 	context = {'likes_plot': likes_plot, 'retweets_plot': retweets_plot}
 	return render(request, 'ttweets_app/timeline.html', context)
-
 
 def hashtag(request): # This is still buggy
 	'''Plot tweets by hashtag'''
@@ -137,6 +145,8 @@ def tokens_error(request):
 				  request = request,
 				  template_name = 'ttweets_app/tokens_error.html'
 				)
+
+
 
 
 
