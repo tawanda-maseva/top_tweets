@@ -9,7 +9,6 @@ from . forms import RegisterForm
 from ttweets_app.models import Access_Tokens, Profile_Tokens
 from ttweets_app.forms import TokensForm
 
-
 # Create your views here.
 
 def login_request(request):
